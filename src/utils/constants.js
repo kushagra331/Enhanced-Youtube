@@ -7,3 +7,7 @@ export const Youtube_Videos_API="https://youtube.googleapis.com/youtube/v3/video
 // "http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=iphone"
 
 export const Youtube_Search_API="http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+
+export const Watch_API="https://youtube.googleapis.com/youtube/v3/comments?part=snippet&parentId=UgzDE2tasfmrYLyNkGt4AaABAg&key="+My_Google_API_Key;
+
+export const LIVE_CHAT_COUNT=12;
