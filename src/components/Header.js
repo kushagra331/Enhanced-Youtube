@@ -1,49 +1,42 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import {Link} from 'react-router-dom'
 import {Youtube_Search_API} from '../utils/constants'
-import { cacheResult } from "../utils/suggestSlice";
+import { cacheResults } from "../utils/searchSlice";
 
 const Header = () =>{
-    const [input,setInput]=useState("");
-    const [suggest,setSuggest]=useState([]);
+    const [searchQuery,setSearchQuery]=useState("");
+    const [suggestions,setSuggestions]=useState([]);
     const [showSuggestions,setShowSuggestions]=useState(false);
-    const dispatch=useDispatch();
-
+    const dispatch = useDispatch();
     const toggleMenuHandler=()=>{
         dispatch(toggleMenu())
     }
-
-
-
-    // 0 ms  setTimeOUt()
-    // 
-
-
-
+    const searchCache=useSelector((store)=>store.search);
+    
+    console.log("searchCache=",searchCache);
     useEffect(()=>{
-        const timer=setTimeout(()=>getSuggestedResult(),200);
+        const timer=setTimeout(()=>{
+            if(searchCache[searchQuery]){
+                setSuggestions(searchCache[searchQuery])
+            }else{
+                getSuggestedResult();
+            }
+        },200);
         return ()=>{
             clearTimeout(timer);
         }
-    },[input]);
-
-
-
-
-
-
-
+    },[searchQuery]);
 
     async function getSuggestedResult(){
-        const data=await fetch(Youtube_Search_API+input);
+        const data=await fetch(Youtube_Search_API+searchQuery);
         const jsondata=await data.json();
         console.log("jsondata=",jsondata[1]);
-        setSuggest(jsondata[1]);
+        setSuggestions(jsondata[1]);
         dispatch(
-            cacheResult({
-                [input]: jsondata[1]
+            cacheResults({
+                [searchQuery]: jsondata[1]
             })
         );
     }
@@ -65,8 +58,8 @@ const Header = () =>{
                 <div key={1} className="w-full flex justify-center">
                     <input 
                     className="h-8 w-1/2 border border-gray-400 p-2 rounded-l-full" type="text"
-                    value={input}
-                    onChange={(e)=>setInput(e.target.value)}
+                    value={searchQuery}
+                    onChange={(e)=>setSearchQuery(e.target.value)}
                     onBlur={()=>setShowSuggestions(false)}
                     onFocus={()=>setShowSuggestions(true)} />
 
@@ -77,7 +70,7 @@ const Header = () =>{
                 {showSuggestions && <div key={2} className="fixed bg-white rounded-lg shadow-lg w-[27rem] ml-52 px-1 py-1">
                     <ul className="py-1 px-1">
                         {
-                            suggest.map((res) => {
+                            suggestions.map((res) => {
                                 return <li className="block px-1 py-1 text-gray-800 hover:bg-gray-100" key={res} >🧐 {res}</li>
                             })
                         }

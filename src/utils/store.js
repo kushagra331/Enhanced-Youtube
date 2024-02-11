@@ -1,12 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appSlice from "./appSlice";
-import suggestSlice from "./suggestSlice";
-
+import searchSlice from "./searchSlice";
 
 const store=configureStore({
     reducer:{
         app:appSlice,
-        suggest:suggestSlice,
+        search:searchSlice,
     },
 });
 

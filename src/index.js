@@ -7,7 +7,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Watch from './components/Watch';
 import Error from './components/Error';
 import MainContainer from './components/MainContainer'
-// import New from './components/New';
+
 const appRouter=createBrowserRouter([
   {
     path:'/',
